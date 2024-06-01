@@ -21,7 +21,7 @@ from nox.sessions import Session
 nox_logger = logging.getLogger("nox")
 
 
-PY27, PY35, PY36, PY37, PY38, PY39, PY310 = "2.7", "3.5", "3.6", "3.7", "3.8", "3.9", "3.10"
+PY38, PY39, PY310, PY311, PY312 = "3.8", "3.9", "3.10", "3.11", "3.12"
 DONT_INSTALL = "dont_install"
 
 
@@ -713,14 +713,13 @@ def patched_popen(
                 # bind the out and err streams - see https://stackoverflow.com/a/59041913/7262247
                 # to mimic nox behaviour we only use a single capturing list
                 outlines = []
-                await asyncio.wait([
+                async with asyncio.TaskGroup() as tg:
                     # process out is only redirected to STDOUT if not silent
-                    _read_stream(process.stdout, lambda l: tee(l, sinklist=outlines, sinkstream=log_file_stream,
-                                                               quiet=silent, verbosepipe=sys.stdout)),
+                    tg.create_task(_read_stream(process.stdout, lambda l: tee(l, sinklist=outlines, sinkstream=log_file_stream,
+                                                               quiet=silent, verbosepipe=sys.stdout)))
                     # process err is always redirected to STDOUT (quiet=False) with a specific label
-                    _read_stream(process.stderr, lambda l: tee(l, sinklist=outlines, sinkstream=log_file_stream,
-                                                               quiet=False, verbosepipe=sys.stdout, label="ERR:"))
-                ])
+                    tg.create_task(_read_stream(process.stderr, lambda l: tee(l, sinklist=outlines, sinkstream=log_file_stream,
+                                                               quiet=False, verbosepipe=sys.stdout, label="ERR:")))
                 return_code = await process.wait()  # make sur the process has ended and retrieve its return code
                 return return_code, outlines
 

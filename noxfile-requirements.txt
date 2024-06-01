@@ -1,4 +1,4 @@
-nox
+nox~=2023.4.22
 toml
 makefun
 setuptools_scm  # used in 'release'

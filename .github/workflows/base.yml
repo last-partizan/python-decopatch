@@ -17,10 +17,10 @@ jobs:
   list_nox_test_sessions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: 3.7
+          python-version: 3.12
           architecture: x64
 
       - name: Install noxfile requirements
@@ -49,11 +49,11 @@ jobs:
       - uses: actions/checkout@v2
 
       # Conda install
-      - name: Install conda v3.7
-        uses: conda-incubator/setup-miniconda@v2
+      - name: Install conda v3.12
+        uses: conda-incubator/setup-miniconda@v3
         with:
           # auto-update-conda: true
-          python-version: 3.7
+          python-version: 3.12
           activate-environment: noxenv
       - run: conda info
         shell: bash -l {0}  # so that conda works
@@ -85,10 +85,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install conda v3.7
-        uses: conda-incubator/setup-miniconda@v2
+      - name: Install conda v3.12
+        uses: conda-incubator/setup-miniconda@v3
         with:
-          python-version: '3.10'
+          python-version: '3.12'
           activate-environment: noxenv
 
       - name: Install noxfile requirements
@@ -118,11 +118,11 @@ jobs:
           path: ./docs/reports
 
       # Conda install
-      - name: Install conda v3.7
-        uses: conda-incubator/setup-miniconda@v2
+      - name: Install conda v3.12
+        uses: conda-incubator/setup-miniconda@v3
         with:
           # auto-update-conda: true
-          python-version: 3.7
+          python-version: 3.12
           activate-environment: noxenv
       - run: conda info
         shell: bash -l {0}  # so that conda works

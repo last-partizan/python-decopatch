@@ -10,7 +10,7 @@ import sys
 # add parent folder to python path so that we can import noxfile_utils.py
 # note that you need to "pip install -r noxfile-requiterements.txt" for this file to work.
 sys.path.append(str(Path(__file__).parent / "ci_tools"))
-from nox_utils import PY27, PY37, PY36, PY35, PY38, PY39, PY310, power_session, rm_folder, rm_file, PowerSession  # noqa
+from nox_utils import PY38, PY39, PY310, PY311, PY312, power_session, rm_folder, rm_file, PowerSession  # noqa
 
 
 pkg_name = "decopatch"
@@ -18,15 +18,12 @@ gh_org = "smarie"
 gh_repo = "python-decopatch"
 
 ENVS = {
-    # python 3.10 is not available on conda yet
-    # PY310: {"coverage": False, "pkg_specs": {"pip": ">19"}},
+    PY312: {"coverage": False, "pkg_specs": {"pip": ">19"}},
+    PY311: {"coverage": False, "pkg_specs": {"pip": ">19"}},
+    PY310: {"coverage": False, "pkg_specs": {"pip": ">19"}},
     PY39: {"coverage": False, "pkg_specs": {"pip": ">19"}},
-    PY38: {"coverage": False, "pkg_specs": {"pip": ">19"}},
-    PY27: {"coverage": False, "pkg_specs": {"pip": ">10"}},
-    PY35: {"coverage": False, "pkg_specs": {"pip": ">10"}},
-    PY36: {"coverage": False, "pkg_specs": {"pip": ">19"}},
     # IMPORTANT: this should be last so that the folder docs/reports is not deleted afterwards
-    PY37: {"coverage": True, "pkg_specs": {"pip": ">19"}},  # , "pytest-html": "1.9.0"
+    PY38: {"coverage": True, "pkg_specs": {"pip": ">19"}},  # , "pytest-html": "1.9.0"
 }
 
 # set the default activated sessions, minimal for CI
@@ -176,7 +173,7 @@ def flake8(session: PowerSession):
     rm_file(Folders.flake8_intermediate_file)
 
 
-@power_session(python=[PY37])
+@power_session(python=[PY38])
 def docs(session: PowerSession):
     """Generates the doc and serves it on a local http server. Pass '-- build' to build statically instead."""
 
@@ -189,7 +186,7 @@ def docs(session: PowerSession):
         session.run2("mkdocs serve")
 
 
-@power_session(python=[PY37])
+@power_session(python=[PY38])
 def publish(session: PowerSession):
     """Deploy the docs+reports on github pages. Note: this rebuilds the docs"""
 
@@ -214,7 +211,7 @@ def publish(session: PowerSession):
     # session.run2('codecov -t %s -f %s' % (codecov_token, Folders.coverage_xml))
 
 
-@power_session(python=[PY37])
+@power_session(python=[PY38])
 def release(session: PowerSession):
     """Create a release on github corresponding to the latest tag"""
 
